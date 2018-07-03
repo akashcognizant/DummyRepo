@@ -1,0 +1,31 @@
+global class MyWebServiceHandler{ 
+    webService Static Id createContact(String FirstName, String LastName)
+    {
+        Contact contRecord = new Contact();
+        
+        contRecord.FirstName = FirstName; 
+        contRecord.LastName = LastName;
+        
+        insert contRecord;
+        return contRecord.Id;
+    }
+}
+
+===========
+
+//Get the Session Id of source ORG
+partnerSoapSforceCom.Soap myPartnerSoap = new partnerSoapSforceCom.Soap();  
+partnerSoapSforceCom.LoginResult partnerLoginResult = myPartnerSoap.login('USERNAME', 'PWD+Security Token'); 
+
+//Build the Session Header
+soapSforceComSchemasClassMywebservi.SessionHeader_element webserviceSessionHeader = new soapSforceComSchemasClassMywebservi.SessionHeader_element();  
+webserviceSessionHeader.sessionId = partnerLoginResult.sessionId;  
+
+//Set the Session Id in SOAP Header
+soapSforceComSchemasClassMywebservi.MyWebServiceHandler myWebservice = new soapSforceComSchemasClassMywebservi.MyWebServiceHandler(); 
+myWebservice.SessionHeader = webserviceSessionHeader; 
+
+//Invoke the createContact web service
+String resp = myWebservice.createContact('SOAP','TEST2');
+
+system.debug('SOAP Response = '+resp);
